@@ -26,7 +26,7 @@ function Services() {
         }
 
         // Fetch updates from central server API
-        fetch('https:/tha082bme.onrender.com/api/announcements')
+        fetch('https://tha082bme.onrender.com/api/announcements')
             .then((res) => {
                 if (!res.ok) throw new Error('Failed to retrieve campus resource feed.');
                 return res.json();
