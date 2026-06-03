@@ -26,6 +26,10 @@ function App() {
     }
     setIsLoggedIn(true);
     const verifiedUser = data?.user || data;
+    
+    // 🌟 THE ULTIMATE TRACE LOG
+    console.log("Portal State Verification -> User Object:", verifiedUser);
+
     setUser(verifiedUser); 
     setCurrentView('landing');
   };
