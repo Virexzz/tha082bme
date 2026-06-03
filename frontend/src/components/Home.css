@@ -1,22 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-.Home{
+.Home {
     font-family: "Montserrat", sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh; /* Changed from height to min-height */
     text-align: center;
-    padding: 0 20px;
+    padding: 20px;
     box-sizing: border-box;
     background-image: url('../images/background.png');
     background-size: cover;
     background-position: center;
 }
 
-#main{
-    font-size: 200px;
+#main {
+    font-size: 200px; /* Default desktop size */
     margin-bottom: 20px;
     background: linear-gradient(135deg, #0076FF, #8900FF);
     -webkit-background-clip: text;
@@ -24,13 +24,26 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     font-weight: 700;
-    padding: 100px 0;
+    padding: 20px 0; /* Reduced top/bottom padding */
 }
 
-.Home span{
+.Home span {
     font-size: 30px;
     margin-bottom: 40px;
     color: black;
     font-weight: 500;
 }
 
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Tablet view */
+@media (max-width: 1024px) {
+    #main { font-size: 120px; }
+    .Home span { font-size: 24px; }
+}
+
+/* Mobile view */
+@media (max-width: 600px) {
+    #main { font-size: 70px; padding: 20px 0; }
+    .Home span { font-size: 18px; margin-bottom: 20px; }
+}
