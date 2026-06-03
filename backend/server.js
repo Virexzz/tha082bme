@@ -221,6 +221,13 @@ app.delete('/api/announcements/:id', async (req, res) => {
     }
 });
 
+app.get('/', (req, res) => {
+    res.status(200).json({
+        message: "Welcome to the Thapathali Campus Engineering Portal API!",
+        status: "Green",
+        database: "Connected"
+    });
+});
 
 // Start listening
 const PORT = process.env.PORT || 5000;
