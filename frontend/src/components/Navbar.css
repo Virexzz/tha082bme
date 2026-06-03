@@ -1,72 +1,82 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
 
-.Navbar{
+.Navbar {
     font-family: "Google Sans", sans-serif;
-    font-size: 20px;
+    font-size: 18px; /* Slightly smaller for better fit */
     display: flex;
     align-items: center;
+    justify-content: space-between; /* Ensures space between Left and Right */
     position: fixed;
     top: 0;
     width: 100%;
     padding: 12px 40px;
     box-sizing: border-box;
-    background: rgba(255, 255, 255, 0.15);  /* semi-transparent white */
-    backdrop-filter: blur(10px);             /* blurs content behind */
-    -webkit-backdrop-filter: blur(10px);     /* Safari support */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* subtle border */
+    background: rgba(255, 255, 255, 0.85); /* Slightly more opaque for readability */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     z-index: 1000;
 }
 
-ul{
+ul {
     list-style-type: none;
     display: flex;
-    gap: 30px;
-
+    gap: 25px;
+    margin: 0;
+    padding: 0;
 }
 
-.NavLeft{
-    flex: 0.98;
-    padding-top: 6px;
-}
-
-#Login{
-    padding-top: 6px;
-}
-
-.NavRight{
+.NavLeft {
     display: flex;
-    gap: 10px;
+}
+
+.NavRight {
+    display: flex;
+    gap: 15px;
     align-items: center;
 }
 
-
-
-button{
+button {
     font-family: "Google Sans", sans-serif;
-    font-size: 20px;
+    font-size: 16px;
     background: linear-gradient(135deg, #0076FF, #8900FF);
     color: white;
     border: none;
     padding: 8px 16px;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    line-height: 1;
-    vertical-align: middle;
     transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-.gradient-button:hover {
-  filter: brightness(1.1); /* Slightly brightens the gradient */
-  transform: translateY(-2px); /* Subtle lift effect */
+button:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
 }
 
-/* Active/Click effect */
-.gradient-button:active {
-  transform: translateY(0);
-}
-
-a{
+a {
     text-decoration: none;
     color: black;
+    white-space: nowrap; /* Prevents text from breaking mid-word */
+}
+
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Tablet & Mobile Breakpoint */
+@media (max-width: 768px) {
+    .Navbar {
+        flex-direction: column; /* Stack vertically */
+        padding: 15px;
+        gap: 10px;
+    }
+
+    ul {
+        gap: 15px;
+        font-size: 16px;
+    }
+
+    .NavLeft, .NavRight {
+        width: 100%;
+        justify-content: center; /* Center links on mobile */
+    }
 }
 
