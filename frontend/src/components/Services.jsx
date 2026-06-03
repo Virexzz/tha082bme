@@ -26,7 +26,7 @@ function Services() {
         }
 
         // Fetch updates from central server API
-        fetch('httpss:/tha082bme.onrender.com/api/announcements')
+        fetch('https:/tha082bme.onrender.com/api/announcements')
             .then((res) => {
                 if (!res.ok) throw new Error('Failed to retrieve campus resource feed.');
                 return res.json();
@@ -125,7 +125,7 @@ function Services() {
                             {item.file_url && (
                                 <div className="card-attachment-wrapper">
                                     <a 
-                                        href={`httpss://tha082bme.onrender.com${item.file_url}`} 
+                                        href={`https://tha082bme.onrender.com${item.file_url}`} 
                                         target="_blank" 
                                         rel="noopener noreferrer" 
                                         className="card-download-btn"

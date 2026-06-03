@@ -42,7 +42,7 @@ function App() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    fetch('httpss://tha082bme.onrender.com/api/auth/me', {
+    fetch('https://tha082bme.onrender.com/api/auth/me', {
         headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => res.ok ? res.json() : Promise.reject())
