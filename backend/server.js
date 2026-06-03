@@ -9,30 +9,37 @@ require('dotenv').config();
 
 const app = express();
 
+// ================= MIDDLEWARES =================
 app.use(express.json()); // Parses incoming JSON body payloads
 
+app.use(cors({
+    origin: '*', // Allows all origins (Perfect for your Vercel deployments!)
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// ================= FILE UPLOADS (MULTER) =================
+// ⚠️ NOTE: Local disk storage wipes upon Render service sleeping/restarting.
+// Perfect for project testing, but long term consider integrating Cloudinary or Supabase Storage buckets.
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/'); // Make sure to create a folder named 'uploads' in your backend root!
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname); // Prevents files with duplicate names from overwriting each other
+        cb(null, Date.now() + '-' + file.originalname); // Prevents name conflicts
     }
 });
 
 const upload = multer({ storage: storage });
 
+// Serve uploaded static files over public routes
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use(cors({
-    origin: '*', // Allows all origins
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// ================= ANNOUNCEMENT ROUTES =================
 
-// UPGRADED POST ROUTE FOR ANNOUNCEMENTS & FILES
+// 🚀 CONSOLIDATED POST ROUTE FOR ANNOUNCEMENTS & FILES
 app.post('/api/announcements', upload.single('file'), async (req, res) => {
-    // Multer puts the text fields in req.body, and the file data in req.file
+    // Multer pushes text fields to req.body, and the file data metadata to req.file
     const { title, content, category, token } = req.body; 
     const fileUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
@@ -40,35 +47,66 @@ app.post('/api/announcements', upload.single('file'), async (req, res) => {
         if (!token) return res.status(401).json({ message: 'No token provided' });
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
+        // Check structural validation against the authorization key match
         const userCheck = await db.query('SELECT is_admin, name FROM users WHERE id = $1', [decoded.id]);
         if (userCheck.rows.length === 0 || !userCheck.rows[0].is_admin) {
-            return res.status(403).json({ message: 'Unauthorized' });
+            return res.status(403).json({ message: 'Unauthorized: Admin access required.' });
         }
 
+        // Insert complete structural parameters into your Supabase Postgres Cluster
         const newPost = await db.query(
             'INSERT INTO announcements (title, content, category, file_url, posted_by) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [title, content, category, fileUrl, userCheck.rows[0].name]
+            [title, content, category || 'General', fileUrl, userCheck.rows[0].name]
         );
 
         res.status(201).json({ post: newPost.rows[0], message: 'Published successfully!' });
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Server Error');
+        console.error('Announcement Posting Error:', err.message);
+        res.status(500).send('Server Error while creating announcement.');
     }
 });
 
-// ================= REGISTER ROUTE =================
+// GET ALL ANNOUNCEMENTS
+app.get('/api/announcements', async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM announcements ORDER BY created_at DESC');
+        res.status(200).json(result.rows);
+    } catch (err) {
+        console.error('Error fetching announcements:', err.message);
+        res.status(500).send('Error fetching announcements from database.');
+    }
+});
+
+// DELETE AN ANNOUNCEMENT
+app.delete('/api/announcements/:id', async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+        const result = await db.query('DELETE FROM announcements WHERE id = $1 RETURNING *', [id]);
+        
+        if (result.rowCount === 0) {
+            return res.status(404).json({ message: "Announcement not found." });
+        }
+        
+        res.json({ message: "Announcement successfully deleted from the campus matrix." });
+    } catch (err) {
+        console.error('Deletion Error:', err.message);
+        res.status(500).json({ message: "Database failure during deletion process." });
+    }
+});
+
+// ================= AUTHENTICATION ROUTES =================
+
+// REGISTER USER
 app.post('/api/auth/register', async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
-        // 1. Structural validation check
         if (!name || !email || !password) {
             return res.status(400).json({ message: 'Please fill in all fields.' });
         }
 
-        // 2. Enforce official Thapathali Mechanical 2082 Email Regex Criteria
-        // Validates roll numbers exactly from 001 to 048
+        // Enforce Thapathali Mechanical 2082 Email Criteria (Roll Numbers 001 to 048)
         const thapathaliEmailRegex = /^[a-zA-Z]+(\.[a-zA-Z]+)*\.082bme(0[0-3][0-9]|04[0-8])@tcioe\.edu\.np$/i;
         if (!thapathaliEmailRegex.test(email)) {
             return res.status(400).json({ 
@@ -76,26 +114,24 @@ app.post('/api/auth/register', async (req, res) => {
             });
         }
 
-        // Standardize email to lower case to eliminate duplicate registration conflicts
         const normalizedEmail = email.toLowerCase();
 
-        // 3. Check if user already exists
+        // Check if user already exists
         const userExist = await db.query('SELECT * FROM users WHERE email = $1', [normalizedEmail]);
         if (userExist.rows.length > 0) {
             return res.status(400).json({ message: 'Email already registered!' });
         }
 
-        // 4. Hash the password securely
+        // Hash the password securely
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // 5. Save to database
+        // Save new profile entry to Cloud Instance
         const newUser = await db.query(
             'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email',
             [name, normalizedEmail, hashedPassword]
         );
 
-        // 6. Generate JWT login token
         const token = jwt.sign({ id: newUser.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         res.status(201).json({ token, user: newUser.rows[0], message: 'Registered successfully!' });
@@ -105,7 +141,7 @@ app.post('/api/auth/register', async (req, res) => {
     }
 });
 
-// ================= LOGIN ROUTE =================
+// LOGIN USER
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -114,10 +150,8 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(400).json({ message: 'Please enter both email and password.' });
         }
 
-        // Standardize incoming credentials to match your database normalization
         const normalizedEmail = email.toLowerCase();
 
-        // 1. Check if user exists
         const userResult = await db.query('SELECT * FROM users WHERE email = $1', [normalizedEmail]);
         if (userResult.rows.length === 0) {
             return res.status(400).json({ message: 'Invalid credentials' });
@@ -125,13 +159,11 @@ app.post('/api/auth/login', async (req, res) => {
 
         const user = userResult.rows[0];
 
-        // 2. Check password matches hashed version
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // 3. Generate JWT login token
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         res.status(200).json({
@@ -145,54 +177,12 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-
-app.get('/api/announcements', async (req, res) => {
-    try {
-        const result = await db.query('SELECT * FROM announcements ORDER BY created_at DESC');
-        res.status(200).json(result.rows);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Error fetching announcements');
-    }
-});
-
-
-app.post('/api/announcements', async (req, res) => {
-    const { title, content, token } = req.body;
-
-    try {
-        if (!token) return res.status(401).json({ message: 'Access Denied: No token provided' });
-
-        // 1. Verify token to find out who this user is
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        // 2. Query DB to check if this user is a verified admin
-        const userCheck = await db.query('SELECT is_admin, name FROM users WHERE id = $1', [decoded.id]);
-        
-        if (userCheck.rows.length === 0 || !userCheck.rows[0].is_admin) {
-            return res.status(403).json({ message: 'Forbidden: You do not have admin rights.' });
-        }
-
-        const adminName = userCheck.rows[0].name;
-
-        // 3. Save announcement to database
-        const newAnnouncement = await db.query(
-            'INSERT INTO announcements (title, content, posted_by) VALUES ($1, $2, $3) RETURNING *',
-            [title, content, adminName]
-        );
-
-        res.status(201).json({ announcement: newAnnouncement.rows[0], message: 'Announcement posted!' });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error while saving announcement.');
-    }
-});
-
+// VALIDATE AUTHENTICATED SESSION USER (`/me`)
 app.get('/api/auth/me', async (req, res) => {
     const authHeader = req.headers.authorization;
-    if (!authHeader) return res.status(401).json({ message: 'No token' });
+    if (!authHeader) return res.status(401).json({ message: 'No token provided' });
 
-    const token = authHeader.split(' ')[1]; // Bearer <token>
+    const token = authHeader.split(' ')[1]; // Splits out "Bearer <token>"
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -209,24 +199,7 @@ app.get('/api/auth/me', async (req, res) => {
     }
 });
 
-app.delete('/api/announcements/:id', async (req, res) => {
-    const { id } = req.params;
-    
-    try {
-        // 🌟 Changed from pool.query to db.query
-        const result = await db.query('DELETE FROM announcements WHERE id = $1 RETURNING *', [id]);
-        
-        if (result.rowCount === 0) {
-            return res.status(404).json({ message: "Announcement not found." });
-        }
-        
-        res.json({ message: "Announcement successfully deleted from the campus matrix." });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Database failure during deletion process." });
-    }
-});
-
+// ================= HEALTH MONITORING =================
 app.get('/', (req, res) => {
     res.status(200).json({
         message: "Welcome to the Thapathali Campus Engineering Portal API!",
@@ -235,7 +208,7 @@ app.get('/', (req, res) => {
     });
 });
 
-// Start listening
+// ================= LIFECYCLE LISTEN =================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Backend engine active on port ${PORT}`);
