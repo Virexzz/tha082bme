@@ -125,7 +125,7 @@ function Services() {
                             {item.file_url && (
                                 <div className="card-attachment-wrapper">
                                     <a 
-                                        href={`http://localhost:5000${item.file_url}`} 
+                                        href={`http:/tha082bme.onrender.com${item.file_url}`} 
                                         target="_blank" 
                                         rel="noopener noreferrer" 
                                         className="card-download-btn"
