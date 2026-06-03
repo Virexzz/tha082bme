@@ -20,6 +20,9 @@ if (process.env.DATABASE_URL) {
         database: process.env.DB_DATABASE || 'postgres',
         password: process.env.DB_PASSWORD,
         port: process.env.DB_PORT || 5432,
+        ssl: {
+        rejectUnauthorized: false  // ← required for Supabase on Render
+    }
     };
 }
 
