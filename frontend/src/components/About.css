@@ -1,0 +1,82 @@
+/* Import font to ensure consistency if loaded independently */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght=0,100..900;1,100..900&display=swap');
+
+.about-page {
+    font-family: "Montserrat", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    /* Reusing your home page background strategy */
+    background-image: url('../images/bg3.png');
+    background-size: cover;
+    background-position: center;
+}
+
+/* The Aesthetic Rounded Rectangle Card */
+.about-card {
+    background: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(10px);
+    
+    max-width: 1000px;
+    width: 100%;
+    padding: 100px 40px;
+    border-radius: 24px; /* Smooth rounded corners */
+    text-align: center;
+    
+    /* Subtle outer glow and drop shadow for depth */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    
+    /* Entrance animation */
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Tie-in the Blue-to-Purple gradient on the Title */
+.about-title {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 34px;
+    margin-top: 0;
+    padding-top: 0;
+    
+    /* Gradient text effect matching #main */
+    background: linear-gradient(135deg, #0076FF, #8900FF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+/* Stronger lead paragraph */
+.about-lead {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* Secondary body text */
+.about-text {
+    font-size: 15px;
+    font-weight: 400;
+    color: #555555;
+    line-height: 1.7;
+}
+
+/* Fade-in animation for a smooth page load */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

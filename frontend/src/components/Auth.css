@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
+
+
+/* Container holding the forms—Explicit width forces it to stay standard layout dimensions */
+.auth-container {
+    font-family: "Google Sans", sans-serif;
+    width: 100%;
+    max-width: 420px;
+    height: 540px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-container.flipped {
+    transform: rotateY(180deg);
+}
+
+/* Cards are structured perfectly inside the form wrapper now */
+.auth-card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden; /* Safari fix */
+    border-radius: 24px;
+    padding: 45px 35px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+}
+
+.card-front {
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}
+
+.auth-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 10px 0;
+    text-align: center;
+    background: linear-gradient(135deg, #0076FF, #8900FF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.auth-subtitle {
+    font-size: 13px;
+    color: #555;
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%; /* Forms expand cleanly inside cards */
+}
+
+.input-group {
+    width: 100%;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 20px;
+    box-sizing: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #111;
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+.input-group input:focus {
+    border-color: #0076FF;
+    background: #ffffff;
+    box-shadow: 0 0 12px rgba(0, 118, 255, 0.15);
+}
+
+.forgot-pass {
+    align-self: flex-end;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.forgot-pass:hover {
+    color: #0076FF;
+}
+
+.auth-btn {
+    background: linear-gradient(135deg, #0076FF, #8900FF);
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: "Montserrat", sans-serif;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 5px;
+    box-shadow: 0 4px 20px rgba(0, 118, 255, 0.2);
+    transition: all 0.2s ease;
+}
+
+.auth-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.toggle-text {
+    text-align: center;
+    font-size: 13px;
+    color: #444;
+    margin-top: 25px;
+    font-weight: 500;
+}
+
+.toggle-text a {
+    color: #8900FF;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.toggle-text a:hover {
+    text-decoration: underline;
+}
+
+.auth-error-banner {
+    background: rgba(255, 59, 48, 0.1);
+    border: 1px solid rgba(255, 59, 48, 0.3);
+    color: #ff3b30;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}

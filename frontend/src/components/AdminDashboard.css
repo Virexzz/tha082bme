@@ -1,0 +1,346 @@
+/* ==========================================================================
+   ADMIN DASHBOARD PROFILE CONFIGURATION
+   ========================================================================== */
+
+.admin-page-wrapper {
+    font-family: "Montserrat", sans-serif;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    box-sizing: border-box;
+    background-image: url('../images/bg3.png'); /* Change to match your background asset path */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Glassmorphism Container */
+.admin-glass-card {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    max-width: 650px;
+    width: 100%;
+    padding: 45px 40px;
+    border-radius: 24px;
+    box-sizing: border-box;
+    
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    
+    animation: adminPanelSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-header-zone {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.admin-title {
+    font-size: 34px;
+    font-weight: 800;
+    margin: 0 0 12px 0;
+    background: linear-gradient(135deg, #0076FF, #8900FF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    letter-spacing: -0.5px;
+}
+
+.admin-subtitle {
+    font-size: 14px;
+    font-weight: 500;
+    color: #5A6A85;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ==========================================================================
+   FORM LAYOUT & INTERFACE ELEMENTS
+   ========================================================================== */
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.admin-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.admin-input-group label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1A253C;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* Unified styling for Inputs, Textareas, and Dropdown Selectors */
+.admin-input-group input[type="text"],
+.admin-input-group textarea,
+.admin-input-group select {
+    width: 100%;
+    padding: 14px 16px;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2C3E50;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(0, 118, 255, 0.15);
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+/* Select element specifics for native clean alignment */
+.admin-input-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230076FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    padding-right: 45px;
+}
+
+.admin-input-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Input Focus Glows */
+.admin-input-group input[type="text"]:focus,
+.admin-input-group textarea:focus,
+.admin-input-group select:focus {
+    background: #ffffff;
+    border-color: #0076FF;
+    box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.12);
+}
+
+/* Custom File Input Styling */
+.admin-input-group input[type="file"] {
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    color: #5A6A85;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px dashed rgba(0, 118, 255, 0.25);
+    cursor: pointer;
+}
+
+/* Style the native "Choose File" button interior */
+.admin-input-group input[type="file"]::file-selector-button {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: #0076FF;
+    background: rgba(0, 118, 255, 0.08);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 12px;
+    transition: all 0.2s ease;
+}
+
+.admin-input-group input[type="file"]::file-selector-button:hover {
+    background: rgba(0, 118, 255, 0.15);
+}
+
+/* ==========================================================================
+   BUTTONS AND STATS CODES
+   ========================================================================== */
+
+.admin-submit-btn {
+    font-family: "Montserrat", sans-serif;
+    width: 100%;
+    padding: 16px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #0076FF, #8900FF);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0, 118, 255, 0.25);
+    transition: all 0.2s ease;
+    margin-top: 8px;
+}
+
+.admin-submit-btn:hover:not(:disabled) {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(0, 118, 255, 0.35);
+}
+
+.admin-submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.admin-submit-btn:disabled {
+    background: #C4CDD5;
+    color: #FFFFFF;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Success & Error Banners */
+.status-banner {
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 25px;
+    line-height: 1.4;
+    animation: adminPanelSlideIn 0.3s ease;
+}
+
+.success-banner {
+    background: rgba(46, 204, 113, 0.12);
+    border: 1px solid rgba(46, 204, 113, 0.25);
+    color: #1E8449;
+}
+
+.error-banner {
+    background: rgba(231, 76, 60, 0.12);
+    border: 1px solid rgba(231, 76, 60, 0.25);
+    color: #A93226;
+}
+
+/* Entry Animation */
+@keyframes adminPanelSlideIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.admin-page-wrapper {
+    flex-direction: column;
+    justify-content: flex-start !important;
+}
+
+.admin-header-zone-global {
+    text-align: center;
+    max-width: 1200px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.admin-split-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1200px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.section-panel-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1A253C;
+    margin: 0 0 20px 0;
+    border-bottom: 2px dashed rgba(0,118,255,0.15);
+    padding-bottom: 10px;
+}
+
+/* Management Feed Scrolling Configuration */
+.management-scroll-container {
+    max-height: 480px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-right: 6px;
+}
+
+.no-posts-admin-text {
+    font-size: 14px;
+    color: #64748B;
+    text-align: center;
+    padding: 40px 0;
+}
+
+/* Individual management rows */
+.admin-manage-card {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.manage-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 75%;
+}
+
+.manage-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: #0076FF;
+    text-transform: uppercase;
+}
+
+.manage-card-info h4 {
+    margin: 0;
+    font-size: 15px;
+    color: #1E293B;
+    font-weight: 700;
+}
+
+.manage-card-info p {
+    margin: 0;
+    font-size: 13px;
+    color: #64748B;
+}
+
+/* Red Wipe Out Button */
+.admin-delete-inline-btn {
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #FFFFFF;
+    background: #FF3B30;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.admin-delete-inline-btn:hover {
+    background: #D7261B;
+}
+
+/* Responsiveness alignment fallback */
+@media (max-width: 950px) {
+    .admin-split-layout {
+        grid-template-columns: 1fr;
+    }
+}

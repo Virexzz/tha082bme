@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+.Home{
+    font-family: "Montserrat", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    background-image: url('../images/background.png');
+    background-size: cover;
+    background-position: center;
+}
+
+#main{
+    font-size: 200px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #0076FF, #8900FF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    font-weight: 700;
+    padding: 100px 0;
+}
+
+.Home span{
+    font-size: 30px;
+    margin-bottom: 40px;
+    color: black;
+    font-weight: 500;
+}
+

@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght=0,100..900;1,100..900&display=swap');
+
+.contact-page {
+    font-family: "Montserrat", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    /* Reusing your home page background strategy */
+    background-image: url('../images/bg4.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.contact-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+/* Matching the main blue-purple text gradient */
+.contact-title {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #0076FF, #8900FF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.contact-subtitle {
+    font-size: 16px;
+    color: #444;
+    font-weight: 500;
+}
+
+/* 2x2 Grid Layout for modern monitors, collapses on mobile */
+.social-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 340px));
+    gap: 30px;
+    perspective: 1000px; /* Needed for 3D flip effect */
+}
+
+/* The Interactive Flip Card Container */
+.social-card {
+    height: 220px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+/* The Magic Hover Trigger */
+.social-card:hover {
+    transform: rotateY(180deg);
+}
+
+/* Common Card Styling (Glassmorphism) */
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* Hides the back side when turned away */
+    border-radius: 20px;
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Card Front Details --- */
+.card-front h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #222;
+    margin: 10px 0 5px 0;
+}
+
+.platform-icon {
+    font-size: 45px;
+}
+
+.hover-hint {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+/* --- Card Back Details (The Reveal) --- */
+.card-back {
+    transform: rotateY(180deg); /* Starts turned around */
+    background: rgba(255, 255, 255, 0.95);
+    justify-content: space-between; /* Gives clean separation of text/button */
+}
+
+.card-back h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+    word-break: break-all; /* Keeps long emails safe */
+}
+
+.card-pun {
+    font-size: 13px;
+    color: #555;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 10px 0;
+}
+
+/* The Gradient Button matching the app aesthetic */
+.action-button {
+    background: linear-gradient(135deg, #0076FF, #8900FF);
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 30px;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0, 118, 255, 0.3);
+}
+
+.action-button:hover {
+    filter: brightness(1.1);
+    transform: scale(1.05);
+}
+
+/* Responsive fix for mobile views */
+@media (max-width: 680px) {
+    .social-grid {
+        grid-template-columns: 1fr;
+        width: 100%;
+        max-width: 340px;
+    }
+}

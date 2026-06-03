@@ -1,0 +1,232 @@
+/* ==========================================================================
+   SERVICES CHANNEL STREAM STYLING
+   ========================================================================== */
+
+.services-section {
+    width: 100%;
+    min-height: 100vh;
+    padding: 100px 20px;
+    background-image: url('../images/bgleft.png'); 
+    background-size: cover;
+    background-position: center;
+    box-sizing: border-box;
+}
+
+.services-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* Sidebar Channels Hub */
+.channels-sidebar {
+    background: #FFFFFF;
+    padding: 30px 24px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    border: 1px solid #E2E8F0;
+}
+
+.sidebar-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0 0 6px 0;
+}
+
+.sidebar-subtitle {
+    font-size: 13px;
+    color: #64748B;
+    line-height: 1.5;
+    margin: 0 0 25px 0;
+}
+
+.channel-tabs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Interactive Tab Rows */
+.channel-tab-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.channel-tab-item:hover {
+    background: #F1F5F9;
+}
+
+.channel-tab-item.active {
+    background: rgba(0, 118, 255, 0.08);
+}
+
+.tab-label {
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    transition: color 0.2s ease;
+}
+
+.channel-tab-item.active .tab-label {
+    color: #0076FF;
+}
+
+.tab-badge-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748B;
+    background: #E2E8F0;
+    padding: 3px 8px;
+    border-radius: 20px;
+}
+
+.channel-tab-item.active .tab-badge-count {
+    background: #0076FF;
+    color: #FFFFFF;
+}
+
+/* Main Display Feed Zone */
+.feed-display-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.feed-header-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0 0 10px 0;
+    border-bottom: 2px solid #E2E8F0;
+    padding-bottom: 14px;
+}
+
+/* Individual Announcement Cards */
+.announcement-card-item {
+    background: #FFFFFF;
+    padding: 30px;
+    border-radius: 18px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.01);
+    transition: transform 0.2s ease;
+}
+
+.announcement-card-item:hover {
+    transform: translateY(-2px);
+}
+
+.card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.card-category-tag {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.card-timestamp {
+    font-size: 12px;
+    color: #94A3B8;
+    font-weight: 500;
+}
+
+.card-post-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1E293B;
+    margin: 0 0 12px 0;
+}
+
+.card-post-content {
+    font-size: 15px;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+    white-space: pre-wrap;
+}
+
+/* Resources & Downloads Link UI */
+.card-attachment-wrapper {
+    margin-bottom: 20px;
+}
+
+.card-download-btn {
+    display: inline-block;
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0076FF;
+    background: rgba(0, 118, 255, 0.06);
+    padding: 12px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: 1px dashed rgba(0, 118, 255, 0.2);
+    transition: all 0.2s ease;
+}
+
+.card-download-btn:hover {
+    background: rgba(0, 118, 255, 0.12);
+    border-color: #0076FF;
+}
+
+.card-footer-attribution {
+    font-size: 12px;
+    color: #64748B;
+    border-top: 1px dashed #E2E8F0;
+    padding-top: 14px;
+}
+
+/* Placeholders & Loading states */
+.feed-status-placeholder, 
+.feed-empty-placeholder,
+.feed-error-placeholder {
+    background: #FFFFFF;
+    padding: 60px;
+    text-align: center;
+    border-radius: 18px;
+    border: 1px dashed #CBD5E1;
+    color: #64748B;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.loading-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #E2E8F0;
+    border-top-color: #0076FF;
+    border-radius: 50%;
+    margin: 0 auto 15px auto;
+    animation: spinLoop 0.8s linear infinite;
+}
+
+@keyframes spinLoop {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .services-container {
+        grid-template-columns: 1fr;
+    }
+}

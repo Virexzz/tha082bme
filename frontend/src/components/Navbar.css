@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
+
+.Navbar{
+    font-family: "Google Sans", sans-serif;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 12px 40px;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.15);  /* semi-transparent white */
+    backdrop-filter: blur(10px);             /* blurs content behind */
+    -webkit-backdrop-filter: blur(10px);     /* Safari support */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* subtle border */
+    z-index: 1000;
+}
+
+ul{
+    list-style-type: none;
+    display: flex;
+    gap: 30px;
+
+}
+
+.NavLeft{
+    flex: 0.98;
+    padding-top: 6px;
+}
+
+#Login{
+    padding-top: 6px;
+}
+
+.NavRight{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+
+
+button{
+    font-family: "Google Sans", sans-serif;
+    font-size: 20px;
+    background: linear-gradient(135deg, #0076FF, #8900FF);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    line-height: 1;
+    vertical-align: middle;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.gradient-button:hover {
+  filter: brightness(1.1); /* Slightly brightens the gradient */
+  transform: translateY(-2px); /* Subtle lift effect */
+}
+
+/* Active/Click effect */
+.gradient-button:active {
+  transform: translateY(0);
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
