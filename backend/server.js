@@ -24,6 +24,12 @@ const upload = multer({ storage: storage });
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.use(cors({
+    origin: '*', // Allows all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 // UPGRADED POST ROUTE FOR ANNOUNCEMENTS & FILES
 app.post('/api/announcements', upload.single('file'), async (req, res) => {
     // Multer puts the text fields in req.body, and the file data in req.file
