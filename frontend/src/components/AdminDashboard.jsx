@@ -15,7 +15,7 @@ function AdminDashboard() {
     // Fetch existing posts automatically so the admin can manage them
     const fetchPosts = async () => {
         try {
-            const response = await fetch('http:/tha082bme.onrender.com/api/announcements');
+            const response = await fetch('httpss://tha082bme.onrender.com/api/announcements');
             const data = await response.json();
             if (response.ok) setExistingPosts(data);
         } catch (err) {
@@ -42,7 +42,7 @@ function AdminDashboard() {
         }
 
         try {
-            const response = await fetch('http:/tha082bme.onrender.com/api/announcements', {
+            const response = await fetch('httpss://tha082bme.onrender.com/api/announcements', {
                 method: 'POST',
                 body: formData 
             });
@@ -71,7 +71,7 @@ function AdminDashboard() {
         if (!window.confirm("Are you sure you want to permanently delete this resource card?")) return;
 
         try {
-            const response = await fetch(`http:/tha082bme.onrender.com/api/announcements/${postId}`, {
+            const response = await fetch(`httpss://tha082bme.onrender.com/api/announcements/${postId}`, {
                 method: 'DELETE'
             });
 

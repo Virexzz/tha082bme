@@ -14,7 +14,7 @@ function Contact() {
             handle: '@memech_al',
             pun: 'Keeping our life in motion. No friction, just pure vibes.',
             btnText: 'Follow Us',
-            url: 'https://www.instagram.com/memech_al'
+            url: 'httpss://www.instagram.com/memech_al'
         },
         {
             platform: 'Facebook',
@@ -22,7 +22,7 @@ function Contact() {
             handle: 'IOE Thapathali Mechanical 2082',
             pun: 'Where our social network has higher torque than our engines.',
             btnText: 'Connect',
-            url: 'https://facebook.com'
+            url: 'httpss://facebook.com'
         },
         {
             platform: 'Discord',
@@ -30,7 +30,7 @@ function Contact() {
             handle: 'Thapathali Mechanical 082',
             pun: 'A server with zero thermal stress. Join for the chaos & calculations.',
             btnText: 'Join Server',
-            url: 'https://discord.gg/UgsnNy47Tj'
+            url: 'httpss://discord.gg/UgsnNy47Tj'
         },
         {
             platform: 'Email',
