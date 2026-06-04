@@ -17,7 +17,7 @@ function Services() {
         { id: 'Essentials', label: '🔑 Core Essentials', color: '#FF2D55', path: '/essentials' }
     ];
 
-    // 🌟 1. Read URL path on initialization mount
+    // 1. Read URL path on initialization mount
     useEffect(() => {
         const currentPath = window.location.pathname;
         const matchedChannel = channels.find(c => c.path === currentPath);
@@ -41,7 +41,7 @@ function Services() {
             });
     }, []);
 
-    // 🌟 2. Handle interactive Tab updates + Push matching clean URLs
+    // 2. Handle interactive Tab updates + Push matching clean URLs
     const handleChannelSwitch = (channelId, pathString) => {
         setActiveChannel(channelId);
         // Shifts URL in browser top bar instantly without refreshing or unmounting React states
@@ -122,21 +122,31 @@ function Services() {
                             <h3 className="card-post-title">{item.title}</h3>
                             <p className="card-post-content">{item.content}</p>
 
-                            {item.file_url && (
-                                <div className="card-attachment-wrapper">
-                                    <a 
-                                        href={`https://tha082bme.onrender.com${item.file_url}`} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer" 
-                                        className="card-download-btn"
-                                    >
-                                        📥 Download Attached Reference File
-                                    </a>
+                            {/* 🌟 FIX 1: Map through the attachments array from your backend SQL query */}
+                            {item.attachments && item.attachments.length > 0 && (
+                                <div className="card-attachments-container" style={{ marginTop: '15px' }}>
+                                    <h5 style={{ margin: '0 0 8px 0', fontSize: '0.85rem', color: '#64748B' }}>
+                                        Attached Resources ({item.attachments.length}):
+                                    </h5>
+                                    {item.attachments.map((file) => (
+                                        <div key={file.id} className="card-attachment-wrapper" style={{ marginBottom: '6px' }}>
+                                            <a 
+                                                href={file.file_url} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer" 
+                                                className="card-download-btn"
+                                                style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}
+                                            >
+                                                📥 {file.file_name || 'Download Attached Reference File'}
+                                            </a>
+                                        </div>
+                                    ))}
                                 </div>
                             )}
 
+                            {/* 🌟 FIX 2: Dynamically print the real author's name using item.created_by */}
                             <div className="card-footer-attribution">
-                                Verified Post By: <strong>{item.posted_by || 'Department Admin'}</strong>
+                                Verified Post By: <strong>{item.created_by || 'Department Head'}</strong>
                             </div>
                         </div>
                     ))}
