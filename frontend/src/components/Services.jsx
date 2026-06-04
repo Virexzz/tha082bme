@@ -146,7 +146,7 @@ function Services() {
 
                             {/* 🌟 FIX 2: Dynamically print the real author's name using item.created_by */}
                             <div className="card-footer-attribution">
-                                Verified Post By: <strong>{item.created_by || 'Department Head'}</strong>
+                                Verified Post By: <strong>{item.created_by || item.posted_by || 'Department Head'}</strong>
                             </div>
                         </div>
                     ))}
