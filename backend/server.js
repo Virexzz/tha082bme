@@ -4,72 +4,105 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('./db');
 const multer = require('multer');
-const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 
 const app = express();
+
+// ================= SUPABASE CLOUD STORAGE INIT =================
+// Ensure you have added these to your Render Environment Variables!
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY; 
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // ================= MIDDLEWARES =================
 app.use(express.json()); // Parses incoming JSON body payloads
 
 app.use(cors({
-    origin: '*', // Allows all origins (Perfect for your Vercel deployments!)
+    origin: '*', // Allows all origins
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // ================= FILE UPLOADS (MULTER) =================
-// ⚠️ NOTE: Local disk storage wipes upon Render service sleeping/restarting.
-// Perfect for project testing, but long term consider integrating Cloudinary or Supabase Storage buckets.
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Make sure to create a folder named 'uploads' in your backend root!
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname); // Prevents name conflicts
-    }
-});
-
-const upload = multer({ storage: storage });
-
-// Serve uploaded static files over public routes
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// We use memoryStorage so files stay in RAM just long enough to push to Supabase.
+// This prevents the Render ephemeral disk crash.
+const upload = multer({ storage: multer.memoryStorage() });
 
 // ================= ANNOUNCEMENT ROUTES =================
 
-// 🚀 CONSOLIDATED POST ROUTE FOR ANNOUNCEMENTS & FILES
-app.post('/api/announcements', upload.single('file'), async (req, res) => {
-    // Multer pushes text fields to req.body, and the file data metadata to req.file
-    const { title, content, category, token } = req.body; 
-    const fileUrl = req.file ? `/uploads/${req.file.filename}` : null;
-
+// 🚀 POST ROUTE: Save text to Postgres, save files to Supabase Storage
+app.post('/api/announcements', upload.array('files', 10), async (req, res) => {
     try {
-        if (!token) return res.status(401).json({ message: 'No token provided' });
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        // Check structural validation against the authorization key match
-        const userCheck = await db.query('SELECT is_admin, name FROM users WHERE id = $1', [decoded.id]);
-        if (userCheck.rows.length === 0 || !userCheck.rows[0].is_admin) {
-            return res.status(403).json({ message: 'Unauthorized: Admin access required.' });
+        const { title, content, category } = req.body;
+
+        // 1. Save the text announcement first
+        const insertResult = await db.query(
+            'INSERT INTO announcements (title, content, category) VALUES ($1, $2, $3) RETURNING id',
+            [title, content, category || 'Class Notice']
+        );
+        const announcementId = insertResult.rows[0].id;
+
+        // 2. If there are files, upload them to Supabase Storage
+        if (req.files && req.files.length > 0) {
+            const attachmentPromises = req.files.map(async (file) => {
+                // Generate a safe, unique file name
+                const uniqueFileName = `${Date.now()}-${file.originalname.replace(/\s+/g, '_')}`;
+                
+                // Upload to Supabase bucket named 'announcement-files'
+                const { error: uploadError } = await supabase.storage
+                    .from('announcement-files')
+                    .upload(uniqueFileName, file.buffer, {
+                        contentType: file.mimetype
+                    });
+
+                if (uploadError) throw uploadError;
+
+                // Get the public URL for the newly uploaded file
+                const { data: publicUrlData } = supabase.storage
+                    .from('announcement-files')
+                    .getPublicUrl(uniqueFileName);
+
+                // Save this specific attachment's metadata to your database
+                await db.query(
+                    'INSERT INTO attachments (announcement_id, file_name, file_url, file_type) VALUES ($1, $2, $3, $4)',
+                    [announcementId, file.originalname, publicUrlData.publicUrl, file.mimetype]
+                );
+            });
+
+            // Wait for all cloud uploads and database inserts to finish
+            await Promise.all(attachmentPromises);
         }
 
-        // Insert complete structural parameters into your Supabase Postgres Cluster
-        const newPost = await db.query(
-            'INSERT INTO announcements (title, content, category, file_url, posted_by) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [title, content, category || 'General', fileUrl, userCheck.rows[0].name]
-        );
-
-        res.status(201).json({ post: newPost.rows[0], message: 'Published successfully!' });
-    } catch (err) {
-        console.error('Announcement Posting Error:', err.message);
-        res.status(500).send('Server Error while creating announcement.');
+        res.status(200).json({ success: true, message: "Posted successfully!" });
+    } catch (error) {
+        console.error("Upload Error:", error);
+        res.status(500).json({ error: error.message });
     }
 });
 
-// GET ALL ANNOUNCEMENTS
+// 🚀 GET ROUTE: Fetch Announcements + their Attachments
 app.get('/api/announcements', async (req, res) => {
     try {
-        const result = await db.query('SELECT * FROM announcements ORDER BY created_at DESC');
+        // Advanced SQL: Fetches announcements and bundles their attachments into a neat JSON array
+        const query = `
+            SELECT a.*, 
+                   COALESCE(
+                       json_agg(
+                           json_build_object(
+                               'id', at.id,
+                               'file_name', at.file_name,
+                               'file_url', at.file_url,
+                               'file_type', at.file_type
+                           )
+                       ) FILTER (WHERE at.id IS NOT NULL), '[]'
+                   ) as attachments
+            FROM announcements a
+            LEFT JOIN attachments at ON a.id = at.announcement_id
+            GROUP BY a.id
+            ORDER BY a.created_at DESC
+        `;
+        const result = await db.query(query);
         res.status(200).json(result.rows);
     } catch (err) {
         console.error('Error fetching announcements:', err.message);
@@ -82,6 +115,8 @@ app.delete('/api/announcements/:id', async (req, res) => {
     const { id } = req.params;
     
     try {
+        // Assuming your 'attachments' table has 'ON DELETE CASCADE' set up,
+        // deleting the announcement will automatically wipe the database records for its files too!
         const result = await db.query('DELETE FROM announcements WHERE id = $1 RETURNING *', [id]);
         
         if (result.rowCount === 0) {
@@ -126,7 +161,7 @@ app.post('/api/auth/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Save new profile entry to Cloud Instance
+        // Save new profile entry to Database
         const newUser = await db.query(
             'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email',
             [name, normalizedEmail, hashedPassword]
