@@ -42,4 +42,14 @@ pool.query('SELECT NOW()', (err, res) => {
     }
 });
 
+console.log("--- DATABASE ENVIRONMENT DEBUG ---");
+console.log("process.env.DATABASE_URL exists?:", !!process.env.DATABASE_URL);
+if (process.env.DATABASE_URL) {
+    console.log("DATABASE_URL value is:", process.env.DATABASE_URL);
+} else {
+    console.log("DB_HOST value is:", process.env.DB_HOST);
+    console.log("DB_USER value is:", process.env.DB_USER);
+}
+console.log("----------------------------------");
+
 module.exports = pool;
