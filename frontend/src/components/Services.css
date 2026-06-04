@@ -100,6 +100,14 @@
 
 /* Main Display Feed Zone */
 .feed-display-zone {
+    /* Adjust this height to match your side-bar's natural height or aesthetic choice */
+    max-height: 750px; 
+    
+    /* 🌟 The Magic Line: Shows a scrollbar only when content spills out vertically */
+    overflow-y: auto; 
+    
+    /* Optional UI Enhancements: Adds separation spacing inside the viewport scroll zone */
+    padding-right: 15px; 
     display: flex;
     flex-direction: column;
     gap: 24px;
