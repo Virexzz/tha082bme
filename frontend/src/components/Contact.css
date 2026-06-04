@@ -151,3 +151,13 @@
         max-width: 340px;
     }
 }
+
+.split-action-container {
+    justify-content: center;
+    align-items: center;
+}
+
+.action-button.split-button {
+    text-align: center;
+    white-space: nowrap;
+}

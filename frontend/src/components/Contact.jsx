@@ -1,10 +1,10 @@
 import React from 'react';
 import './Contact.css';
 import { HugeiconsIcon } from '@hugeicons/react';
-import {InstagramIcon} from '@hugeicons/core-free-icons'
-import {Facebook02Icon} from '@hugeicons/core-free-icons'
-import {DiscordIcon} from '@hugeicons/core-free-icons'
-import {Mail01Icon} from '@hugeicons/core-free-icons'
+import { InstagramIcon } from '@hugeicons/core-free-icons';
+import { WhatsappIcon } from '@hugeicons/core-free-icons';
+import { DiscordIcon } from '@hugeicons/core-free-icons';
+import { Mail01Icon } from '@hugeicons/core-free-icons';
 
 function Contact() {
     const socialLinks = [
@@ -17,12 +17,15 @@ function Contact() {
             url: 'https://www.instagram.com/memech_al'
         },
         {
-            platform: 'Facebook',
-            icon: <HugeiconsIcon icon={Facebook02Icon} />,
-            handle: 'IOE Thapathali Mechanical 2082',
+            platform: 'Class Representative',
+            icon: <HugeiconsIcon icon={WhatsappIcon} />,
+            handle: 'Anjan Karki / Sangam Timsina',
             pun: 'Where our social network has higher torque than our engines.',
-            btnText: 'Connect',
-            url: 'https://facebook.com'
+            // 🌟 Upgraded to support independent split action parameters
+            actions: [
+                { label: 'Anjan (WA)', url: 'https://wa.me/9779765067298' },
+                { label: 'Sangam (WA)', url: 'https://wa.me/9779813351355' }
+            ]
         },
         {
             platform: 'Discord',
@@ -63,9 +66,28 @@ function Contact() {
                         <div className="card-back">
                             <h4>{social.handle}</h4>
                             <p className="card-pun">"{social.pun}"</p>
-                            <a href={social.url} target="_blank" rel="noopener noreferrer" className="action-button">
-                                {social.btnText}
-                            </a>
+                            
+                            {/* 🌟 Conditional Action Block: Handles Split URLs or Single URLs cleanly */}
+                            {social.actions ? (
+                                <div className="split-action-container" style={{ display: 'flex', gap: '8px', width: '100%', marginTop: 'auto' }}>
+                                    {social.actions.map((act, i) => (
+                                        <a 
+                                            key={i}
+                                            href={act.url} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            className="action-button split-button"
+                                            style={{ flex: 1, padding: '10px 5px', fontSize: '0.8rem' }}
+                                        >
+                                            {act.label}
+                                        </a>
+                                    ))}
+                                </div>
+                            ) : (
+                                <a href={social.url} target="_blank" rel="noopener noreferrer" className="action-button">
+                                    {social.btnText}
+                                </a>
+                            )}
                         </div>
                     </div>
                 ))}
