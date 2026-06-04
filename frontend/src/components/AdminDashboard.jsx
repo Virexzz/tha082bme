@@ -5,7 +5,10 @@ function AdminDashboard() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [category, setCategory] = useState('Class Notice'); 
-    const [file, setFile] = useState(null);
+    
+    // 🌟 CHANGED: Now an array to hold multiple files
+    const [files, setFiles] = useState([]); 
+    
     const [statusMsg, setStatusMsg] = useState({ text: '', isError: false });
     const [isLoading, setIsLoading] = useState(false);
     
@@ -37,8 +40,12 @@ function AdminDashboard() {
         formData.append('content', content);
         formData.append('category', category);
         formData.append('token', localStorage.getItem('token'));
-        if (file) {
-            formData.append('file', file);
+        
+        // 🌟 CHANGED: Loop through the array and append each file under the key 'files'
+        if (files && files.length > 0) {
+            files.forEach((file) => {
+                formData.append('files', file); 
+            });
         }
 
         try {
@@ -53,9 +60,9 @@ function AdminDashboard() {
                 setStatusMsg({ text: `🚀 ${category} published successfully!`, isError: false });
                 setTitle('');
                 setContent('');
-                setFile(null);
+                setFiles([]); // 🌟 Clear the files array
                 document.getElementById('file-field').value = '';
-                fetchPosts(); // 🌟 Refresh the list immediately on a new upload!
+                fetchPosts(); // Refresh the list immediately on a new upload!
             } else {
                 setStatusMsg({ text: `❌ Error: ${data.message}`, isError: true });
             }
@@ -66,7 +73,7 @@ function AdminDashboard() {
         }
     };
 
-    // 🌟 NEW: Handle direct server removal request
+    // Handle direct server removal request
     const handleDeletePost = async (postId) => {
         if (!window.confirm("Are you sure you want to permanently delete this resource card?")) return;
 
@@ -79,7 +86,7 @@ function AdminDashboard() {
 
             if (response.ok) {
                 setStatusMsg({ text: "🗑️ Announcement scrubbed from resource feed successfully.", isError: false });
-                fetchPosts(); // 🌟 Refresh the list immediately!
+                fetchPosts(); // Refresh the list immediately!
             } else {
                 setStatusMsg({ text: `❌ Delete failed: ${data.message}`, isError: true });
             }
@@ -141,14 +148,21 @@ function AdminDashboard() {
                         </div>
 
                         <div className="admin-input-group">
-                            <label>Attach Resource File (Optional PDF/Image)</label>
+                            <label>Attach Resource Files (PDF, Image, ZIP, Video)</label>
                             <input 
                                 id="file-field"
                                 type="file" 
-                                accept=".pdf, .png, .jpg, .jpeg"
-                                onChange={(e) => setFile(e.target.files[0])}
+                                multiple // 🌟 NEW: Allows selecting multiple files
+                                accept=".pdf, .png, .jpg, .jpeg, .zip, .mp4, .doc, .docx" // 🌟 Expanded accepted types
+                                onChange={(e) => setFiles(Array.from(e.target.files))} // 🌟 Convert FileList to Array
                                 disabled={isLoading}
                             />
+                            {/* 🌟 NEW: UX improvement to show how many files are staged */}
+                            {files.length > 0 && (
+                                <span style={{ fontSize: '0.85rem', color: '#0076FF', marginTop: '5px', display: 'block' }}>
+                                    {files.length} file(s) selected
+                                </span>
+                            )}
                         </div>
 
                         <button type="submit" className="admin-submit-btn" disabled={isLoading}>
