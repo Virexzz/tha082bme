@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // 🔗 Replace with your actual Google Apps Script Web App URL
-const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzPtHiGkpS8PTxeOJRA2mb0vPiILOsHq9KTxyJd-nupRfDMJHiUbjt-wpLUSU-pQ2ovkw/exec";
 
 export default function GroupRegistration() {
   const [groupName, setGroupName] = useState('');
