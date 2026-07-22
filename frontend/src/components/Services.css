@@ -28,6 +28,8 @@
     border-radius: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
     border: 1px solid #E2E8F0;
+    position: sticky;
+    top: 30px; /* Kept fixed while scrolling through large feeds */
 }
 
 .sidebar-title {
@@ -61,7 +63,7 @@
     border-radius: 12px;
     cursor: pointer;
     text-align: left;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .channel-tab-item:hover {
@@ -91,6 +93,7 @@
     background: #E2E8F0;
     padding: 3px 8px;
     border-radius: 20px;
+    transition: all 0.2s ease;
 }
 
 .channel-tab-item.active .tab-badge-count {
@@ -100,17 +103,30 @@
 
 /* Main Display Feed Zone */
 .feed-display-zone {
-    /* Adjust this height to match your side-bar's natural height or aesthetic choice */
-    max-height: 750px; 
-    
-    /* 🌟 The Magic Line: Shows a scrollbar only when content spills out vertically */
+    max-height: 85vh; /* Shifts dynamically based on actual device layouts */
     overflow-y: auto; 
-    
-    /* Optional UI Enhancements: Adds separation spacing inside the viewport scroll zone */
     padding-right: 15px; 
     display: flex;
     flex-direction: column;
     gap: 24px;
+}
+
+/* 🌟 Added: Styled Webkit Scrollbar for a premium UI feel */
+.feed-display-zone::-webkit-scrollbar {
+    width: 6px;
+}
+
+.feed-display-zone::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.feed-display-zone::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 20px;
+}
+
+.feed-display-zone::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
 }
 
 .feed-header-title {
@@ -129,11 +145,12 @@
     border-radius: 18px;
     border: 1px solid #E2E8F0;
     box-shadow: 0 4px 25px rgba(0, 0, 0, 0.01);
-    transition: transform 0.2s ease;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
 }
 
 .announcement-card-item:hover {
     transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
 }
 
 .card-top-row {
@@ -169,23 +186,35 @@
     font-size: 15px;
     color: #475569;
     line-height: 1.6;
-    margin: 0 0 20px 0;
+    margin: 0 0 15px 0;
     white-space: pre-wrap;
 }
 
 /* Resources & Downloads Link UI */
+.card-attachments-container {
+    border-top: 1px dashed #E2E8F0;
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
+
 .card-attachment-wrapper {
-    margin-bottom: 20px;
+    margin-bottom: 8px;
+}
+
+.card-attachment-wrapper:last-child {
+    margin-bottom: 0;
 }
 
 .card-download-btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-family: "Montserrat", sans-serif;
     font-size: 13px;
     font-weight: 700;
     color: #0076FF;
-    background: rgba(0, 118, 255, 0.06);
-    padding: 12px 20px;
+    background: rgba(0, 118, 255, 0.05);
+    padding: 10px 16px;
     border-radius: 10px;
     text-decoration: none;
     border: 1px dashed rgba(0, 118, 255, 0.2);
@@ -195,6 +224,7 @@
 .card-download-btn:hover {
     background: rgba(0, 118, 255, 0.12);
     border-color: #0076FF;
+    transform: translateX(2px);
 }
 
 .card-footer-attribution {
@@ -202,6 +232,7 @@
     color: #64748B;
     border-top: 1px dashed #E2E8F0;
     padding-top: 14px;
+    margin-top: 15px;
 }
 
 /* Placeholders & Loading states */
@@ -209,7 +240,7 @@
 .feed-empty-placeholder,
 .feed-error-placeholder {
     background: #FFFFFF;
-    padding: 60px;
+    padding: 60px 20px;
     text-align: center;
     border-radius: 18px;
     border: 1px dashed #CBD5E1;
@@ -234,7 +265,28 @@
 
 /* Responsive adjustments */
 @media (max-width: 900px) {
+    .services-section {
+        padding: 60px 15px;
+    }
+
     .services-container {
         grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .channels-sidebar {
+        position: relative;
+        top: 0;
+        padding: 20px;
+    }
+
+    .feed-display-zone {
+        max-height: none; /* Let content flow naturally on mobile screens */
+        overflow-y: visible;
+        padding-right: 0;
+    }
+    
+    .announcement-card-item {
+        padding: 20px;
     }
 }

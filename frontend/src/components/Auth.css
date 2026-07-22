@@ -161,3 +161,11 @@
     margin-bottom: 15px;
     line-height: 1.4;
 }
+
+.auth-card {
+    /* Ensures card backs/fronts preserve clean vertical sizing when buttons adjust */
+    height: auto;
+    min-height: 480px; 
+    display: flex;
+    flex-direction: column;
+}

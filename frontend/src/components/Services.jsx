@@ -17,15 +17,9 @@ function Services() {
         { id: 'Essentials', label: '🔑 Core Essentials', color: '#FF2D55', path: '/essentials' }
     ];
 
-    // 1. Read URL path on initialization mount
-    useEffect(() => {
-        const currentPath = window.location.pathname;
-        const matchedChannel = channels.find(c => c.path === currentPath);
-        if (matchedChannel) {
-            setActiveChannel(matchedChannel.id);
-        }
-
-        // Fetch updates from central server API
+    // Fetch updates from central server API
+    const fetchResourceFeed = () => {
+        setIsLoading(true);
         fetch('https://tha082bme.onrender.com/api/announcements')
             .then((res) => {
                 if (!res.ok) throw new Error('Failed to retrieve campus resource feed.');
@@ -39,6 +33,29 @@ function Services() {
                 setErrorMsg(err.message);
                 setIsLoading(false);
             });
+    };
+
+    // 1. Read URL path on initialization mount & bind popstate history listener
+    useEffect(() => {
+        const handleLocationCheck = () => {
+            const currentPath = window.location.pathname;
+            const matchedChannel = channels.find(c => c.path === currentPath);
+            if (matchedChannel) {
+                setActiveChannel(matchedChannel.id);
+            } else {
+                setActiveChannel('All Channels');
+            }
+        };
+
+        // Run checks on mount
+        handleLocationCheck();
+        fetchResourceFeed();
+
+        // 🌟 Syncs view cleanly if user interacts with browser back/forward buttons
+        window.addEventListener('popstate', handleLocationCheck);
+        return () => {
+            window.removeEventListener('popstate', handleLocationCheck);
+        };
     }, []);
 
     // 2. Handle interactive Tab updates + Push matching clean URLs
@@ -111,7 +128,7 @@ function Services() {
                                         backgroundColor: `${channels.find(c => c.id === item.category)?.color}15`,
                                         color: channels.find(c => c.id === item.category)?.color
                                     }}
-                                >
+                                Amin>
                                     {item.category}
                                 </span>
                                 <span className="card-timestamp">
@@ -122,7 +139,14 @@ function Services() {
                             <h3 className="card-post-title">{item.title}</h3>
                             <p className="card-post-content">{item.content}</p>
 
-                            {/* 🌟 FIX 1: Map through the attachments array from your backend SQL query */}
+                            {/* 🌟 Deadline Display Box: Highlights assignment milestones cleanly */}
+                            {item.deadline && (
+                                <div className="card-deadline-banner" style={{ display: 'inline-flex', alignItems: 'center', background: '#FF950012', border: '1px solid #FF950030', color: '#D97706', padding: '6px 12px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', margin: '10px 0 5px 0' }}>
+                                    ⏳ Target Deadline: {new Date(item.deadline).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}
+                                </div>
+                            )}
+
+                            {/* Attachments Mapping rendering loop logic wrapper */}
                             {item.attachments && item.attachments.length > 0 && (
                                 <div className="card-attachments-container" style={{ marginTop: '15px' }}>
                                     <h5 style={{ margin: '0 0 8px 0', fontSize: '0.85rem', color: '#64748B' }}>
@@ -144,7 +168,7 @@ function Services() {
                                 </div>
                             )}
 
-                            {/* 🌟 FIX 2: Dynamically print the real author's name using item.created_by */}
+                            {/* Metadata Post Attribution footer tracking line */}
                             <div className="card-footer-attribution">
                                 Verified Post By: <strong>{item.created_by || item.posted_by || 'Department Head'}</strong>
                             </div>
