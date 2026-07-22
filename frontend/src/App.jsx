@@ -7,7 +7,6 @@ import Services from './components/Services.jsx';
 import Auth from './components/Auth.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import GroupRegistration from './GroupRegistration';
-import MainPortal from './MainPortal';
 import './App.css';
 
 function App() {
@@ -15,7 +14,20 @@ function App() {
   const [currentView, setCurrentView] = useState('landing'); // Modes: 'landing', 'auth', or 'admin'
   const [initialFormSide, setInitialFormSide] = useState(false); 
   const [user, setUser] = useState(null);
+
+  // 1. SUBDOMAIN & PATH DETECTOR (Checked FIRST before any UI renders)
   const hostname = window.location.hostname;
+  const currentPath = window.location.pathname;
+
+  // Render GroupRegistration if user accesses via subdomain OR visits /register-group path
+  if (
+    hostname.startsWith('projects.') || 
+    hostname.startsWith('groups.') || 
+    currentPath === '/register-group' || 
+    currentPath === '/groups'
+  ) {
+    return <GroupRegistration />;
+  }
 
   const handleOpenAuth = (wantsRegister) => {
     setInitialFormSide(wantsRegister);
@@ -30,7 +42,6 @@ function App() {
     setIsLoggedIn(true);
     const verifiedUser = data?.user || data;
     
-    // 🌟 THE ULTIMATE TRACE LOG
     console.log("Portal State Verification -> User Object:", verifiedUser);
 
     setUser(verifiedUser); 
@@ -63,36 +74,33 @@ function App() {
     });
   }, []);
 
-  // 🌟 NEW HOOK LIFECYCLE: URL Deep-Link Scanner Routing
+  // URL Deep-Link Scanner Routing
   useEffect(() => {
-      const pathToIdMap = {
-        '/home': 'home',
-        '/about': 'about',
-        '/services': 'services',
-        '/contact': 'contact',
-        '/class-notices': 'services',
-        '/assignment-notices': 'services',
-        '/routines': 'services',
-        '/class-notes': 'services',
-        '/essentials': 'services'
-      };
+    const pathToIdMap = {
+      '/home': 'home',
+      '/about': 'about',
+      '/services': 'services',
+      '/contact': 'contact',
+      '/class-notices': 'services',
+      '/assignment-notices': 'services',
+      '/routines': 'services',
+      '/class-notes': 'services',
+      '/essentials': 'services'
+    };
 
-      const currentPath = window.location.pathname;
-      const targetId = pathToIdMap[currentPath];
+    const targetId = pathToIdMap[currentPath];
 
-      if (targetId) {
-        setCurrentView('landing'); // Keep standard viewport structure alive
-        
-        // Give React a microsecond to paint DOM tree before scrolling
-        setTimeout(() => {
-          const targetElement = document.getElementById(targetId);
-          if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 400);
-      }
-    }, []);
-
+    if (targetId) {
+      setCurrentView('landing'); 
+      
+      setTimeout(() => {
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 400);
+    }
+  }, [currentPath]);
 
   // ================= CONDITIONAL LAYOUT SWITCHES =================
 
@@ -136,7 +144,6 @@ function App() {
         onNavigateAdmin={() => setCurrentView('admin')} 
       />
       
-      {/* 🌟 CRUCIAL VERIFICATION: Section wrappers tagged with matching semantic target anchors */}
       <div id="home">
         <Home />
       </div>
@@ -172,11 +179,6 @@ function App() {
       </footer>
     </div>
   );
-  if (hostname.startsWith('projects.') || hostname.startsWith('groups.')) {
-    return <GroupRegistration />;
-  }
-
-  return <MainPortal />;
 }
 
 export default App;
