@@ -6,6 +6,8 @@ import Contact from './components/Contact.jsx';
 import Services from './components/Services.jsx';
 import Auth from './components/Auth.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
+import GroupRegistration from './GroupRegistration';
+import MainPortal from './MainPortal';
 import './App.css';
 
 function App() {
@@ -13,6 +15,7 @@ function App() {
   const [currentView, setCurrentView] = useState('landing'); // Modes: 'landing', 'auth', or 'admin'
   const [initialFormSide, setInitialFormSide] = useState(false); 
   const [user, setUser] = useState(null);
+  const hostname = window.location.hostname;
 
   const handleOpenAuth = (wantsRegister) => {
     setInitialFormSide(wantsRegister);
@@ -169,6 +172,11 @@ function App() {
       </footer>
     </div>
   );
+  if (hostname.startsWith('projects.') || hostname.startsWith('groups.')) {
+    return <GroupRegistration />;
+  }
+
+  return <MainPortal />;
 }
 
 export default App;
