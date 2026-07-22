@@ -15,19 +15,8 @@ function App() {
   const [initialFormSide, setInitialFormSide] = useState(false); 
   const [user, setUser] = useState(null);
 
-  // 1. SUBDOMAIN & PATH DETECTOR (Checked FIRST before any UI renders)
   const hostname = window.location.hostname;
   const currentPath = window.location.pathname;
-
-  // Render GroupRegistration if user accesses via subdomain OR visits /register-group path
-  if (
-    hostname.startsWith('projects.') || 
-    hostname.startsWith('groups.') || 
-    currentPath === '/register-group' || 
-    currentPath === '/groups'
-  ) {
-    return <GroupRegistration />;
-  }
 
   const handleOpenAuth = (wantsRegister) => {
     setInitialFormSide(wantsRegister);
@@ -55,7 +44,7 @@ function App() {
     localStorage.removeItem('token'); 
   };
 
-  // HOOK LIFECYCLE ZONE: Token validation state persistence
+  // HOOK LIFECYCLE 1: Token validation state persistence
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return;
@@ -74,7 +63,7 @@ function App() {
     });
   }, []);
 
-  // URL Deep-Link Scanner Routing
+  // HOOK LIFECYCLE 2: URL Deep-Link Scanner Routing
   useEffect(() => {
     const pathToIdMap = {
       '/home': 'home',
@@ -102,7 +91,18 @@ function App() {
     }
   }, [currentPath]);
 
-  // ================= CONDITIONAL LAYOUT SWITCHES =================
+  // ================= EARLY RETURNS & CONDITIONAL LAYOUTS =================
+  // (Always place early returns AFTER all hooks)
+
+  // 0. GROUP REGISTRATION SUBDOMAIN / PATH CHECK
+  if (
+    hostname.startsWith('projects.') || 
+    hostname.startsWith('groups.') || 
+    currentPath === '/register-group' || 
+    currentPath === '/groups'
+  ) {
+    return <GroupRegistration />;
+  }
 
   // 1. ADMIN WORKSPACE
   if (currentView === 'admin' && user?.is_admin) {
